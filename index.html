@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Gift For You ❤️</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&family=Sacramento&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .cursive { font-family: 'Sacramento', cursive; }
+        .hidden-state { display: none !important; }
+        /* Animasi Balon Melayang */
+        @keyframes floatUp {
+            0% { transform: translateY(20px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-30px) rotate(5deg); }
+        }
+        .balloon-anim { animation: floatUp 4s ease-in-out infinite alternate; }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-sky-200 via-blue-100 to-pink-100 min-h-screen flex items-center justify-center p-4 select-none overflow-x-hidden">
+
+    <audio id="bg-music" loop></audio>
+
+    <div class="w-full max-w-md bg-white/60 backdrop-blur-xl border border-white/50 rounded-3xl shadow-2xl shadow-blue-300/40 p-6 relative overflow-hidden min-h-[550px] flex flex-col justify-center transition-all duration-500">
+        
+        <button id="music-btn" class="absolute top-4 right-4 z-50 w-10 h-10 bg-white/80 backdrop-blur-sm rounded-full shadow-md flex items-center justify-center text-lg hidden cursor-pointer active:scale-95 transition-all">🎵</button>
+
+        <div id="state-1" class="text-center space-y-6 flex flex-col items-center justify-center fade-in">
+            <button id="btn-open-gift" class="w-28 h-28 bg-gradient-to-tr from-sky-400 to-blue-500 text-white rounded-full shadow-xl shadow-blue-400/40 flex items-center justify-center text-4xl animate-bounce hover:scale-105 transition-all cursor-pointer">
+                💙
+            </button>
+            <div class="space-y-1">
+                <h2 class="text-xs uppercase tracking-widest text-blue-500 font-bold">Tap to open</h2>
+                <p class="text-xs text-slate-400 uppercase tracking-widest">A gift for you</p>
+            </div>
+        </div>
+
+        <div id="state-loading" class="text-center space-y-4 hidden-state">
+            <h1 class="text-2xl font-bold text-slate-700 animate-pulse">Loading, please wait...</h1>
+            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden max-w-[200px] mx-auto">
+                <div class="bg-blue-500 h-full rounded-full w-0 transition-all duration-2000 ease-out" id="loading-bar"></div>
+            </div>
+            <p class="text-xs text-slate-400 uppercase tracking-widest">Opening...</p>
+        </div>
+
+        <div id="state-2" class="space-y-6 hidden-state text-center">
+            <div class="bg-white/80 rounded-2xl p-5 border border-slate-100 shadow-sm text-left relative min-h-[300px] flex flex-col justify-between">
+                <div>
+                    <h3 class="text-2xl font-bold text-blue-500 cursive" id="letter-title"></h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mt-3 italic whitespace-pre-line" id="typing-text"></p>
+                </div>
+                <button id="btn-to-wishes" class="w-full py-3 bg-gradient-to-r from-blue-500 to-sky-500 text-white text-sm font-semibold rounded-xl mt-4 shadow-lg shadow-blue-500/20 active:scale-95 transition-all hidden cursor-pointer">
+                    Open Wishes ✨
+                </button>
+            </div>
+        </div>
+
+        <div id="state-3" class="hidden-state text-center space-y-6">
+            <div class="space-y-1">
+                <h2 class="text-2xl font-extrabold text-slate-800">Wishes for You 🎈</h2>
+                <p class="text-xs text-slate-500">Pecahkan setiap balon untuk membuka harapan indah!</p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-4 py-6 justify-items-center max-w-[280px] mx-auto" id="balloon-container">
+                </div>
+
+            <div class="text-sm font-semibold text-slate-600">
+                <span id="balloons-popped">0</span> / 5 Balon Dipecahkan
+            </div>
+
+            <button id="btn-to-gallery" class="w-full py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-sm font-semibold rounded-xl shadow-lg shadow-pink-500/20 active:scale-95 transition-all opacity-40 cursor-not-allowed" disabled>
+                Buka Hadiah Utama 🎁
+            </button>
+        </div>
+
+        <div id="state-4" class="hidden-state text-center space-y-6">
+            <div class="space-y-1">
+                <h2 class="text-2xl font-extrabold text-slate-800 cursive text-3xl">Our Moments 💙</h2>
+                <p class="text-xs text-slate-500 max-w-[280px] mx-auto">Today is yours, I hope it's filled with smiles and happiness.</p>
+            </div>
+
+            <div class="relative w-full aspect-square bg-white border-4 border-white rounded-2xl shadow-xl overflow-hidden group">
+                <img id="gallery-img" src="" alt="Moments" class="w-full h-full object-cover transition-all duration-500 transform scale-100">
+                <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent p-4 text-left">
+                    <p id="gallery-caption" class="text-white text-xs md:text-sm font-medium italic"></p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-center gap-4">
+                <button id="prev-slide" class="w-10 h-10 bg-white rounded-full shadow border border-slate-100 flex items-center justify-center text-slate-700 active:scale-95 transition-all cursor-pointer">←</button>
+                <div class="flex gap-1.5" id="slider-dots"></div>
+                <button id="next-slide" class="w-10 h-10 bg-white rounded-full shadow border border-slate-100 flex items-center justify-center text-slate-700 active:scale-95 transition-all cursor-pointer">→</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        // ==========================================
+        // CONFIGURATION PANEL (Ubah Datamu Di Sini)
+        // ==========================================
+        const CONFIG = {
+            musicUrl: "song.mp3", // Link direct lagu mp3
+            letterTitle: "Dear My Love 💖,",
+            letterText: `Happy birthday sayanggg...\n\nDi hari spesial ini, aku ingin kamu tahu betapa berartinya kamu dalam hidupku. Kehadiranmu membawa kebahagiaan yang tidak bisa digantikan oleh apa pun.\n\nTerima kasih sudah selalu ada, menemani, dan mencintai aku dengan tulus. Semoga di usia barumu ini, semua impianmu perlahan menjadi nyata, langkahmu selalu dimudahkan, dan hatimu selalu dipenuhi kebahagiaan.\n\nAku berharap kita bisa terus berjalan bersama, melewati segala hal, dan menciptakan lebih banyak kenangan indah ke depannya. Aku mencintaimu, hari ini dan selalu.`,
+            
+            // Isi 5 harapan untuk game balon
+            wishes: [
+                "Semoga semua impianmu segera tercapai! ✨",
+                "Selalu diberikan kesehatan dan perlindungan 🤲",
+                "Bahagia selalu setiap harinya yaa 🥰",
+                "Semoga kita bisa terus bersama melewati segalanya 💖",
+                "Makin sayang dan dimudahkan rezekinya 🚀"
+            ],
+
+            // Daftar foto dan teks caption di bagian akhir slider
+            gallery: [
+                {
+                    url: "pp1.jpg",
+                    caption: "I hope all your dreams slowly come true. I believe in you, always. 💖"
+                },
+                {
+                    url: "pp2.JPG",
+                    caption: "With you, everything feels more meaningful. Let's stay like this forever. ✨"
+                },
+                {
+                    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=500&q=80",
+                    caption: "Your special day. I hope it's filled with all the good things. I love you. 😍"
+                }
+            ]
+        };
+
+        // ==========================================
+        // SYSTEM LOGIC KODE (Jangan Diubah)
+        // ==========================================
+        const audio = document.getElementById('bg-music');
+        audio.src = CONFIG.musicUrl;
+
+        // State 1 ke Loading
+        document.getElementById('btn-open-gift').addEventListener('click', () => {
+            document.getElementById('state-1').classList.add('hidden-state');
+            document.getElementById('state-loading').classList.remove('hidden-state');
+            
+            // Putar musik aman dari block browser
+            audio.play().then(() => {
+                document.getElementById('music-btn').classList.remove('hidden');
+            }).catch(e => console.log("Audio play blocked:", e));
+
+            // Efek Loading Bar
+            const bar = document.getElementById('loading-bar');
+            setTimeout(() => { bar.style.width = '100%'; }, 100);
+
+            // Transisi ke State Surat
+            setTimeout(() => {
+                document.getElementById('state-loading').classList.add('hidden-state');
+                document.getElementById('state-2').classList.remove('hidden-state');
+                startTyping();
+            }, 2500);
+        });
+
+        // Toggle Musik
+        let isPlaying = true;
+        document.getElementById('music-btn').addEventListener('click', () => {
+            if(isPlaying) { audio.pause(); document.getElementById('music-btn').innerText = "❌"; }
+            else { audio.play(); document.getElementById('music-btn').innerText = "🎵"; }
+            isPlaying = !isPlaying;
+        });
+
+        // Efek Mengetik Otomatis Halaman Surat
+        function startTyping() {
+            document.getElementById('letter-title').innerText = CONFIG.letterTitle;
+            const textElement = document.getElementById('typing-text');
+            const fullText = CONFIG.letterText;
+            let index = 0;
+
+            function type() {
+                if (index < fullText.length) {
+                    textElement.innerHTML += fullText.charAt(index);
+                    index++;
+                    setTimeout(type, 35); // Kecepatan ngetik teks surat
+                } else {
+                    document.getElementById('btn-to-wishes').classList.remove('hidden');
+                }
+            }
+            type();
+        }
+
+        // Pindah dari Surat ke Mini Game Balon
+        document.getElementById('btn-to-wishes').addEventListener('click', () => {
+            document.getElementById('state-2').classList.add('hidden-state');
+            document.getElementById('state-3').classList.remove('hidden-state');
+            initBalloons();
+        });
+
+        // Logic Mini Game Balon
+        let poppedCount = 0;
+        function initBalloons() {
+            const container = document.getElementById('balloon-container');
+            // Menyiapkan warna balon estetik pastel bervariasi
+            const colors = ['bg-sky-400', 'bg-pink-400', 'bg-purple-400', 'bg-teal-400', 'bg-rose-400'];
+            
+            for (let i = 0; i < 5; i++) {
+                const b = document.createElement('button');
+                // Menggabungkan gaya styling balon bulat melayang
+                b.className = `w-14 h-18 ${colors[i]} rounded-full relative shadow-md text-white font-bold text-lg flex items-center justify-center cursor-pointer balloon-anim active:scale-90 transition-all`;
+                b.style.animationDelay = `${i * 0.3}s`;
+                b.innerText = i + 1;
+                
+                // Event klik pecah balon
+                b.addEventListener('click', () => {
+                    if (!b.classList.contains('popped')) {
+                        b.classList.add('popped');
+                        // Efek pecah (hilang)
+                        b.style.transform = 'scale(0)';
+                        b.style.opacity = '0';
+                        setTimeout(() => b.style.visibility = 'hidden', 300);
+                        
+                        // Bunyi ledakan visual (Confetti mini)
+                        confetti({ particleCount: 30, spread: 40, origin: { x: b.getBoundingClientRect().left / window.innerWidth, y: b.getBoundingClientRect().top / window.innerHeight } });
+                        
+                        // Munculkan isi pop up wish harapan
+                        alert(`Wish #${i+1}:\n${CONFIG.wishes[i]}`);
+                        
+                        poppedCount++;
+                        document.getElementById('balloons-popped').innerText = poppedCount;
+                        
+                        // Jika ke-5 balon tuntas dipecahkan
+                        if (poppedCount === 5) {
+                            const btnGallery = document.getElementById('btn-to-gallery');
+                            btnGallery.removeAttribute('disabled');
+                            btnGallery.classList.remove('opacity-40', 'cursor-not-allowed');
+                            btnGallery.classList.add('scale-105');
+                        }
+                    }
+                });
+                container.appendChild(b);
+            }
+        }
+
+        // Pindah dari Balon ke Galeri Utama
+        document.getElementById('btn-to-gallery').addEventListener('click', () => {
+            if (poppedCount === 5) {
+                document.getElementById('state-3').classList.add('hidden-state');
+                document.getElementById('state-4').classList.remove('hidden-state');
+                // Ledakan selebrasi pesta meriah di galeri akhir
+                confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+                initSlider();
+            }
+        });
+
+        // Logic Slider / Carousel Galeri
+        let currentSlide = 0;
+        function initSlider() {
+            updateSlide();
+            const dotsContainer = document.getElementById('slider-dots');
+            dotsContainer.innerHTML = '';
+            
+            CONFIG.gallery.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.className = `w-2 h-2 rounded-full transition-all ${idx === 0 ? 'bg-blue-500 w-4' : 'bg-slate-300'}`;
+                dot.id = `dot-${idx}`;
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function updateSlide() {
+            const img = document.getElementById('gallery-img');
+            const caption = document.getElementById('gallery-caption');
+            
+            // Efek transisi halus gambar berganti
+            img.style.opacity = '0.4';
+            setTimeout(() => {
+                img.src = CONFIG.gallery[currentSlide].url;
+                caption.innerText = CONFIG.gallery[currentSlide].caption;
+                img.style.opacity = '1';
+            }, 200);
+
+            // Update indikator dots aktif
+            CONFIG.gallery.forEach((_, idx) => {
+                const d = document.getElementById(`dot-${idx}`);
+                if(d) {
+                    if(idx === currentSlide) { d.className = 'w-2 h-2 rounded-full bg-blue-500 w-4 transition-all'; }
+                    else { d.className = 'w-2 h-2 rounded-full bg-slate-300 transition-all'; }
+                }
+            });
+        }
+
+        document.getElementById('next-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % CONFIG.gallery.length;
+            updateSlide();
+        });
+        document.getElementById('prev-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + CONFIG.gallery.length) % CONFIG.gallery.length;
+            updateSlide();
+        });
+    </script>
+</body>
+</html>
